@@ -2,86 +2,12 @@ import React from "react";
 // import logo from "./logo.svg";
 // import "./App.css";
 import ApolloClient from "apollo-boost";
-import { gql } from "apollo-boost";
 import "tachyons";
+import { query } from "./query";
 
 const client = new ApolloClient({
   uri: "https://api.devcdc.com/cricket"
 });
-
-const query = gql`
-  query getSchedule($type: String, $status: String, $page: Int) {
-    schedule(type: $type, status: $status, page: $page) {
-      seriesID
-      currentinningsNo
-      currentInningteamID
-      currentInningsTeamName
-      seriesName
-      homeTeamName
-      awayTeamName
-      toss
-      startEndDate
-      matchStatus
-      matchID
-      matchType
-      statusMessage
-      matchNumber
-      venue
-      matchResult
-      startDate
-      playerOfTheMatch
-      playerID
-      firstInningsTeamID
-      secondInningsTeamID
-      thirdInningsTeamID
-      fourthInningsTeamID
-      matchScore {
-        teamShortName
-        teamID
-        teamFullName
-        teamScore {
-          inning
-          inningNumber
-          battingTeam
-          runsScored
-          wickets
-          overs
-          runRate
-          battingSide
-          teamID
-          battingTeamShortName
-          declared
-          folowOn
-        }
-      }
-      teamsWinProbability {
-        homeTeamShortName
-        homeTeamPercentage
-        awayTeamShortName
-        awayTeamPercentage
-        tiePercentage
-      }
-      isCricklyticsAvailable
-      isLiveCriclyticsAvailable
-      currentDay
-      currentSession
-      playing11Status
-      isAbandoned
-      rRunRate
-      probable11Status
-      IPLpolling {
-        name
-        isPolling
-        display
-        isCompleted
-        isAuctionStarted
-      }
-      isFantasyAvailable
-      hasStatistics
-      hasPoints
-    }
-  }
-`;
 
 class App extends React.Component {
   constructor(props) {
@@ -91,7 +17,8 @@ class App extends React.Component {
     this.status = null;
 
     this.state = {
-      data: null
+      data: null,
+      page: 1
     };
   }
 
@@ -103,6 +30,8 @@ class App extends React.Component {
 
   getData(type, status) {
     console.log("type status", type, status);
+    console.log("page", this.state.page);
+
     // if (!type) {
     //   type = "All";
     // }
@@ -117,7 +46,7 @@ class App extends React.Component {
         variables: {
           type,
           status,
-          page: 1
+          page: this.state.page
         }
       })
       .then(result => {
@@ -134,6 +63,22 @@ class App extends React.Component {
 
   fnOnClickStatus(status) {
     this.status = status;
+    this.getData(this.type, this.status);
+  }
+
+  prevPage() {
+    if (this.state.page === 1) {
+      return;
+    }
+
+    const page = this.state.page;
+    this.setState({ page: page - 1 });
+    this.getData(this.type, this.status);
+  }
+
+  nextPage() {
+    const page = this.state.page;
+    this.setState({ page: page + 1 });
     this.getData(this.type, this.status);
   }
 
@@ -221,6 +166,30 @@ class App extends React.Component {
               );
             })}
         </ul>
+        <div class="mw8 center">
+          <nav class="cf pa3 pa4-ns" data-name="pagination-next-prev">
+            <a
+              class="fl dib link dim black f6 f5-ns b pa2"
+              href="#0"
+              title="Previous"
+              onClick={() => {
+                this.prevPage();
+              }}
+            >
+              &larr; Previous
+            </a>
+            <a
+              class="fr dib link dim black f6 f5-ns b pa2"
+              href="#0"
+              title="Next"
+              onClick={() => {
+                this.nextPage();
+              }}
+            >
+              Next &rarr;
+            </a>
+          </nav>
+        </div>
       </React.Fragment>
     );
   }
