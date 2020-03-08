@@ -1,6 +1,6 @@
 import React from "react";
 // import logo from "./logo.svg";
-// import "./App.css";
+import "./App.css";
 import ApolloClient from "apollo-boost";
 import "tachyons";
 import { query } from "./query";
@@ -31,14 +31,6 @@ class App extends React.Component {
   getData(type, status) {
     console.log("type status", type, status);
     console.log("page", this.state.page);
-
-    // if (!type) {
-    //   type = "All";
-    // }
-
-    // if (!status) {
-    //   status = "upcoming";
-    // }
 
     client
       .query({
@@ -85,10 +77,10 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        Scheduler
-        <div class="ph3 mt4">
+        <div class="title">Scheduler</div>
+        <div class="ph3 mt4 status">
           <a
-            class="f6 link dim ba ph3 pv2 mb2 dib black"
+            class="f6 link dim ba ph3 pv2 mb2 dib black link"
             href="#0"
             onClick={() => {
               this.fnOnClickStatus("upcoming");
@@ -115,7 +107,7 @@ class App extends React.Component {
             Completed
           </a>
         </div>
-        <div class="ph3 mt4">
+        <div class="ph3 mt4 type">
           <a
             class="f6 link dim ba ph3 pv2 mb2 dib black"
             href="#0"
@@ -144,27 +136,32 @@ class App extends React.Component {
             Domestic
           </a>
         </div>
-        <ul class="list pl0 ml0 center mw5 ba b--light-silver br3">
-          {this.state.data &&
+        <ul class="list pl0 ml0 center mw6 ba b--light-silver br3">
+          {this.state.data ? (
             this.state.data.map((item, index) => {
               return (
-                <div key={index} style={{ border: "1px solid" }}>
-                  {item.seriesName}
-                  <div>
-                    {item.matchNumber} - {item.venue}
-                  </div>
-                  <div>{item.matchScore[0].teamFullName}</div>
-                  <div>{item.matchScore[1].teamFullName}</div>
-                  <div>{item.statusMessage}</div>
-                  <div>
-                    Date{" "}
-                    {new Date(item.startDate * 1000)
-                      .toString()
-                      .replace("GMT+0530 (India Standard Time)", "")}
+                <div class="list">
+                  <div key={index} class="subList">
+                    {item.seriesName}
+                    <div>
+                      {item.matchNumber} - {item.venue}
+                    </div>
+                    <div>{item.matchScore[0].teamFullName}</div>
+                    <div>{item.matchScore[1].teamFullName}</div>
+                    <div>{item.statusMessage}</div>
+                    <div>
+                      Date{" : "}
+                      {new Date(item.startDate * 1000)
+                        .toString()
+                        .replace("GMT+0530 (India Standard Time)", "")}
+                    </div>
                   </div>
                 </div>
               );
-            })}
+            })
+          ) : (
+            <div>No data found</div>
+          )}
         </ul>
         <div class="mw8 center">
           <nav class="cf pa3 pa4-ns" data-name="pagination-next-prev">
