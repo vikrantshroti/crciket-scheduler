@@ -1,6 +1,6 @@
 import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+// import logo from "./logo.svg";
+// import "./App.css";
 import ApolloClient from "apollo-boost";
 import { gql } from "apollo-boost";
 import "tachyons";
@@ -102,13 +102,14 @@ class App extends React.Component {
   }
 
   getData(type, status) {
-    if (!type) {
-      type = "All";
-    }
+    console.log("type status", type, status);
+    // if (!type) {
+    //   type = "All";
+    // }
 
-    if (!status) {
-      status = "upcoming";
-    }
+    // if (!status) {
+    //   status = "upcoming";
+    // }
 
     client
       .query({
@@ -145,7 +146,7 @@ class App extends React.Component {
             class="f6 link dim ba ph3 pv2 mb2 dib black"
             href="#0"
             onClick={() => {
-              this.fnOnClickType("upcoming");
+              this.fnOnClickStatus("upcoming");
             }}
           >
             Upcoming
@@ -154,7 +155,7 @@ class App extends React.Component {
             class="f6 link dim ba ph3 pv2 mb2 dib near-black"
             href="#0"
             onClick={() => {
-              this.fnOnClickType("running");
+              this.fnOnClickStatus("running");
             }}
           >
             Running
@@ -163,7 +164,7 @@ class App extends React.Component {
             class="f6 link dim ba ph3 pv2 mb2 dib dark-gray"
             href="#0"
             onClick={() => {
-              this.fnOnClickType("completed");
+              this.fnOnClickStatus("completed");
             }}
           >
             Completed
@@ -174,7 +175,7 @@ class App extends React.Component {
             class="f6 link dim ba ph3 pv2 mb2 dib black"
             href="#0"
             onClick={() => {
-              this.fnOnClickStatus("All");
+              this.fnOnClickType("All");
             }}
           >
             All
@@ -183,7 +184,7 @@ class App extends React.Component {
             class="f6 link dim ba ph3 pv2 mb2 dib near-black"
             href="#0"
             onClick={() => {
-              this.fnOnClickStatus("International");
+              this.fnOnClickType("International");
             }}
           >
             International
@@ -192,20 +193,31 @@ class App extends React.Component {
             class="f6 link dim ba ph3 pv2 mb2 dib dark-gray"
             href="#0"
             onClick={() => {
-              this.fnOnClickStatus("Domestic");
+              this.fnOnClickType("Domestic");
             }}
           >
             Domestic
           </a>
         </div>
         <ul class="list pl0 ml0 center mw5 ba b--light-silver br3">
-          <li class="ph3 pv2 bb b--light-silver">Mackeral Tabby</li>
           {this.state.data &&
             this.state.data.map((item, index) => {
               return (
-                <li key={index} class="ph3 pv2 bb b--light-silver">
-                  {item.seriesID}
-                </li>
+                <div key={index} style={{ border: "1px solid" }}>
+                  {item.seriesName}
+                  <div>
+                    {item.matchNumber} - {item.venue}
+                  </div>
+                  <div>{item.matchScore[0].teamFullName}</div>
+                  <div>{item.matchScore[1].teamFullName}</div>
+                  <div>{item.statusMessage}</div>
+                  <div>
+                    Date{" "}
+                    {new Date(item.startDate * 1000)
+                      .toString()
+                      .replace("GMT+0530 (India Standard Time)", "")}
+                  </div>
+                </div>
               );
             })}
         </ul>
