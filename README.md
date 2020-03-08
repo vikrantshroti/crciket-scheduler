@@ -1,9 +1,9 @@
-# It is an assignment, achieved following :
+## It is an assignment, achieved following :
 
-## used tachyons css
-## simple graphql interaction
-## moble / web responsive
-## pagination
+#### used tachyons css
+#### simple graphql interaction
+#### moble / web responsive
+#### pagination
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
